@@ -4,7 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>sk_web_app</RootNamespace>
+    <RootNamespace>sk_web_api</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230704.3-preview" />
+  </ItemGroup>
 
 </Project>
