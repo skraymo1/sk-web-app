@@ -29,7 +29,7 @@ Open the solution in your developer environment ([Visual Studio Code](https://co
 
 With a minimal API, the POST endpoint is simply defined in the program.cs file.
 ```C#
-app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
+    app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
 ```   
 The path specifiesis a "pluginName" and a "functionName" to execute.   
 As an example, a call to this endpoint would be "/plugins/FunPlugin/invoke/Joke".  In the project FunPlugin is the directory which contains the Joke plugin.   
@@ -44,56 +44,56 @@ Within the Semantic Kernel repo are several examples of [plugins](https://github
 
 Here is an example of the Joke plugin from this repo.
 ```Text
-WRITE EXACTLY ONE JOKE or HUMOROUS STORY ABOUT THE TOPIC BELOW
+    WRITE EXACTLY ONE JOKE or HUMOROUS STORY ABOUT THE TOPIC BELOW
 
-JOKE MUST BE:
-- G RATED
-- WORKPLACE/FAMILY SAFE
-NO SEXISM, RACISM OR OTHER BIAS/BIGOTRY
+    JOKE MUST BE:
+    - G RATED
+    - WORKPLACE/FAMILY SAFE
+    NO SEXISM, RACISM OR OTHER BIAS/BIGOTRY
 
-BE CREATIVE AND FUNNY. I WANT TO LAUGH.
+    BE CREATIVE AND FUNNY. I WANT TO LAUGH.
 
-+++++
+    +++++
 
-{{$input}}
-+++++
+    {{$input}}
+    +++++
 ```
 
 The skprompt.txt file a simple text file defining the natural language prmopt that will be sent to the AI service.   Pair that with the config.json file which provides configuration information to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner?tabs=Csharp) and you have created a [semantic function](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/semantic-functions?tabs=Csharp).   
 
 The next step is to read the header values passed in the request.  These are the Azure OpenAI or OpenAI information needed to execute the query.  Below is an example with Azure OpenAI
 ```C#
-                var headers = context.Request.Headers;
-                var model = headers["x-sk-web-app-model"];
-                var endpoint = headers["x-sk-web-app-endpoint"];
-                var key = headers["x-sk-web-app-key"];
-                if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(endpoint) || String.IsNullOrEmpty(key))
-                {
-                    throw new Exception("Missing required headers");
-                }
+    var headers = context.Request.Headers;
+    var model = headers["x-sk-web-app-model"];
+    var endpoint = headers["x-sk-web-app-endpoint"];
+    var key = headers["x-sk-web-app-key"];
+    if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(endpoint) || String.IsNullOrEmpty(key))
+    {
+        throw new Exception("Missing required headers");
+    }
 ```   
 Instantiate the kernel 
 ```C#
-                var kernel =  new KernelBuilder()
-                    .WithAzureTextCompletionService(model!, endpoint!, key!)
-                    .Build();
+    var kernel =  new KernelBuilder()
+        .WithAzureTextCompletionService(model!, endpoint!, key!)
+        .Build();
 ```   
 
 Set the location and specified skill to execute   
 ```C#
 
-                var pluginDirectory = "Plugins";
+    var pluginDirectory = "Plugins";
 
-                var plugInFunctions = kernel!.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
+    var plugInFunctions = kernel!.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
 ```   
 
 Execute the function and return the result
 ```C#
 
-                var result = await plugInFunctions[functionName].InvokeAsync(query.Value);
-                SKResponse response = new SKResponse();
-                response.Value = result.Result.Trim();
-                return Results.Json(response);
+    var result = await plugInFunctions[functionName].InvokeAsync(query.Value);
+    SKResponse response = new SKResponse();
+    response.Value = result.Result.Trim();
+    return Results.Json(response);
 ```   
 
 
