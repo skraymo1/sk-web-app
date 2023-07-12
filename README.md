@@ -2,7 +2,6 @@
 Semantic Kernel using minimal API
 
 The Sematic Kernel is a great tool to help developers quickly integrate their codebases with OpenAI or Azure OpenAI models.  The SK team has provided wonderful samples in C# and python using functions, web apps and notebooks.  
-#TODO add SK links
 
 [Semantic Kernel Overview](https://learn.microsoft.com/en-us/semantic-kernel/overview/)   
 [Semantic Kernel Repo](https://github.com/microsoft/semantic-kernel)
@@ -32,15 +31,17 @@ With a minimal API, the POST endpoint is simply defined in the program.cs file.
 ```C#
 app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
 ```   
-The path is looking for a plugin with a "pluginName" and will call a plugin "functionName".
+For this example, the path specifiesis a "pluginName" and a "functionName" to execute.  
 
-What are plugins?
+So... what are plugins?   
 Plugins are interoperable, [Open AI standards based](https://platform.openai.com/docs/plugins/getting-started/), encapsulated AI capabilities.
 
 Clear?   
 
-How about, a plugin is simple implementation of an AI task that can be shared in the future with other copilots.   
-Within the Semantic Kernel repo are several examples of plugins.  Here is an example of the Joke plugin from this repo.
+How about, a plugin is a simple implementation of an AI task that can be shared in the future with other copilots.   
+Within the Semantic Kernel repo are several examples of [plugins](https://github.com/microsoft/semantic-kernel/tree/main/samples/skills) (note: plugins used to be skills).   
+
+Here is an example of the Joke plugin from this repo.
 ```Text
 WRITE EXACTLY ONE JOKE or HUMOROUS STORY ABOUT THE TOPIC BELOW
 
