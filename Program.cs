@@ -22,11 +22,11 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext con
                     .Build();
 
 
-                var skillsDirectory = "Plugins";
+                var pluginDirectory = "Plugins";
 
-                var funSkillFunctions = kernel!.ImportSemanticSkillFromDirectory(skillsDirectory, pluginName);
+                var plugInFunctions = kernel!.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
 
-                var result = await funSkillFunctions[functionName].InvokeAsync(query.Value);
+                var result = await plugInFunctions[functionName].InvokeAsync(query.Value);
                 SKResponse response = new SKResponse();
                 response.Value = result.Result.Trim();
                 return Results.Json(response);

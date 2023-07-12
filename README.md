@@ -61,26 +61,40 @@ BE CREATIVE AND FUNNY. I WANT TO LAUGH.
 
 The skprompt.txt file a simple text file defining the natural language prmopt that will be sent to the AI service.   Pair that with the config.json file which provides configuration information to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner?tabs=Csharp) and you have created a [semantic function](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/semantic-functions?tabs=Csharp).   
 
+The next step is to read the header values passed in the request.  These are the Azure OpenAI or OpenAI information needed to execute the query.  Below is an example with Azure OpenAI
+```C#
+                var headers = context.Request.Headers;
+                var model = headers["x-sk-web-app-model"];
+                var endpoint = headers["x-sk-web-app-endpoint"];
+                var key = headers["x-sk-web-app-key"];
+                if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(endpoint) || String.IsNullOrEmpty(key))
+                {
+                    throw new Exception("Missing required headers");
+                }
+```   
+Instantiate the kernel 
+```C#
+                var kernel =  new KernelBuilder()
+                    .WithAzureTextCompletionService(model!, endpoint!, key!)
+                    .Build();
+```   
 
+Set the location and specified skill to execute   
+```C#
 
-        {
-            try
-            {
-                var kernel = new KernelHelper().CreateAzureOpenAIKernel(context.Request.Headers);
+                var pluginDirectory = "Plugins";
 
-                var skillsDirectory = "Plugins";
+                var plugInFunctions = kernel!.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
+```   
 
-                var funSkillFunctions = kernel!.ImportSemanticSkillFromDirectory(skillsDirectory, pluginName);
+Execute the function and return the result
+```C#
 
-                var result = await funSkillFunctions[functionName].InvokeAsync(query.Value);
+                var result = await plugInFunctions[functionName].InvokeAsync(query.Value);
                 SKResponse response = new SKResponse();
                 response.Value = result.Result.Trim();
                 return Results.Json(response);
-            }
-            catch (Exception ex)
-            {
-                return Results.Json(new SKResponse { Value = ex.Message });
-            }
+```   
 
-        });
+
 
