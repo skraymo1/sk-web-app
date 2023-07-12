@@ -31,7 +31,8 @@ With a minimal API, the POST endpoint is simply defined in the program.cs file.
 ```C#
 app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
 ```   
-For this example, the path specifiesis a "pluginName" and a "functionName" to execute.  
+The path specifiesis a "pluginName" and a "functionName" to execute.   
+As an example, a call to this endpoint would be "/plugins/FunPlugin/invoke/Joke".  In the project FunPlugin is the directory which contains the Joke plugin.   
 
 So... what are plugins?   
 Plugins are interoperable, [Open AI standards based](https://platform.openai.com/docs/plugins/getting-started/), encapsulated AI capabilities.
