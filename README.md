@@ -95,6 +95,18 @@ Execute the function and return the result
     response.Value = result.Result.Trim();
     return Results.Json(response);
 ```   
+Start the application (debug start or dotnet run) and the service should be ready.   
+
+From Postman, ask the service for a joke   
+![inital post](images/postman1.jpg)   
+
+And the result...   
+```JSON
+    {
+        "value":"A bear was looking for a job and decided to become an Uber driver. He was a great driver and always got five-star reviews from his passengers. One day, a passenger asked him why he was so good at his job. The bear replied, \"It's simple, I just follow the bear necessities of life!\""
+    }
+```
+
 
 
 
