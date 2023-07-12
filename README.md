@@ -31,7 +31,7 @@ With a minimal API, the POST endpoint is simply defined in the program.cs file.
 ```C#
     app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
 ```   
-The path specifiesis a "pluginName" and a "functionName" to execute.   
+The path specifies a "pluginName" and a "functionName" to execute.   
 As an example, a call to this endpoint would be "/plugins/FunPlugin/invoke/Joke".  In the project FunPlugin is the directory which contains the Joke plugin.   
 
 So... what are plugins?   
@@ -59,7 +59,7 @@ Here is an example of the Joke plugin from this repo.
     +++++
 ```
 
-The skprompt.txt file a simple text file defining the natural language prmopt that will be sent to the AI service.   Pair that with the config.json file which provides configuration information to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner?tabs=Csharp) and you have created a [semantic function](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/semantic-functions?tabs=Csharp).   
+The skprompt.txt file a simple text file defining the natural language prompt that will be sent to the AI service.   Pair that with the config.json file which provides configuration information to the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planner?tabs=Csharp) and you have created a [semantic function](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/semantic-functions?tabs=Csharp).   
 
 The next step is to read the header values passed in the request.  These are the Azure OpenAI or OpenAI information needed to execute the query.  Below is an example with Azure OpenAI
 ```C#
@@ -98,7 +98,7 @@ Execute the function and return the result
 Start the application (Start or "dotnet run" from the terminal) and the service should be ready.   
 
 From Postman, ask the service for a joke   
-![inital post](images/postman1.jpg)   
+![initial post](images/postman1.jpg)   
 
 And the result...   
 ```JSON
