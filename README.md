@@ -13,7 +13,9 @@ The goal of this repository is to implement a C# minimal API using the Semantic 
 
 ### Prerequisites
   
-* API key from the [Azure OpenAI portal](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource)   
+* An [OpenAI account](https://openai.com/)  
+[Video on how to open an account](https://www.youtube.com/watch?v=zJSYMWlCcPY)
+* API key from the [OpenAI portal](https://platform.openai.com/)     
 OR
 * An [Azure subscription](https://azure.microsoft.com/free/)
 * Azure OpenAI subscription.  Access to the Azure OpenAI portal is by application only.  
