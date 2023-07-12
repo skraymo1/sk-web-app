@@ -95,7 +95,7 @@ Execute the function and return the result
     response.Value = result.Result.Trim();
     return Results.Json(response);
 ```   
-Start the application (debug start or dotnet run) and the service should be ready.   
+Start the application (Start or "dotnet run" from the terminal) and the service should be ready.   
 
 From Postman, ask the service for a joke   
 ![inital post](images/postman1.jpg)   
