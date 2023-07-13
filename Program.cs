@@ -7,15 +7,7 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext con
         {
             try
             {
-
-                var headers = context.Request.Headers;
-                var endpoint = headers["x-sk-web-app-endpoint"];
-                var model = headers["x-sk-web-app-model"];
-                var key = headers["x-sk-web-app-key"];
-                if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(key))
-                {
-                    throw new Exception("Missing required headers");
-                }
+                var (endpoint, model, key) = LoadHeaders(context);
 
                 IKernel kernel;
 
@@ -51,3 +43,20 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext con
         });
 
 app.Run();
+
+
+static (string? model, string? endpoint, string? key) LoadHeaders(HttpContext context)
+{
+    var headers = context.Request.Headers;
+    string? endpoint = headers["x-sk-web-app-endpoint"];
+    string? model = headers["x-sk-web-app-model"];
+    string? key = headers["x-sk-web-app-key"];
+    if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(key))
+    {
+        throw new Exception("Missing required headers");
+    }
+    else
+    {
+        return (endpoint, model, key);
+    }
+}
