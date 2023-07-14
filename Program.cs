@@ -3,12 +3,13 @@ global using Microsoft.SemanticKernel;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+
 app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext context, Query query, string pluginName, string functionName) =>
         {
             try
             {
                 var kernel = LoadKernel(context);
-                
+
                 var pluginDirectory = "Plugins";
                 var plugInFunctions = kernel.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
 
@@ -54,7 +55,17 @@ static IKernel LoadKernel(HttpContext context)
 {
     var headers = context.Request.Headers;
     string? endpoint = headers["x-sk-web-app-endpoint"];
-    string? model = headers["x-sk-web-app-model"];
+
+    string? model = headers["x-sk-web-app-model"];;
+    if (String.IsNullOrEmpty(model))
+    {
+        model = Environment.GetEnvironmentVariable("kv-model");
+        // if (String.IsNullOrEmpty(model))
+        // {
+        //     model = Environment.GetEnvironmentVariable("model");
+        // }
+    }
+
     string? key = headers["x-sk-web-app-key"];
     if (String.IsNullOrEmpty(model) || String.IsNullOrEmpty(key))
     {

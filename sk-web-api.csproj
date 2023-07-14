@@ -11,7 +11,4 @@
     <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230704.3-preview" />
   </ItemGroup>
 
-  <!-- <ItemGroup>
-    <Content Include="Plugins/**" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup> -->
 </Project>
