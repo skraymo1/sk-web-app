@@ -7,27 +7,10 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext con
         {
             try
             {
-                var (endpoint, model, key) = LoadHeaders(context);
-
-                IKernel kernel;
-
-                //If endpoint is empty, this could be OpenAI
-                if (String.IsNullOrEmpty(endpoint))
-                {
-                    kernel = new KernelBuilder()
-                        .WithOpenAITextCompletionService(model!, key!)
-                        .Build();
-                }
-                else
-                {
-                    kernel = new KernelBuilder()
-                        .WithAzureTextCompletionService(model!, endpoint!, key!)
-                        .Build();
-                }
-
+                var kernel = LoadKernel(context);
+                
                 var pluginDirectory = "Plugins";
-
-                var plugInFunctions = kernel!.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
+                var plugInFunctions = kernel.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
 
                 var result = await plugInFunctions[functionName].InvokeAsync(query.Value);
                 SKResponse response = new SKResponse();
@@ -42,10 +25,32 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext con
 
         });
 
+
+app.MapPost("chain", async (HttpContext context, Query query) =>
+        {
+            try
+            {
+                var kernel = LoadKernel(context);
+                var pluginDirectory = "Plugins";
+                var departmentFunction = kernel.Skills.GetFunction(pluginDirectory, "DepartmentRouter");
+                var detectIntentFunction = kernel.Skills.GetFunction(pluginDirectory, "DetectIntent");
+
+                var result = await kernel.RunAsync(query.Value!, departmentFunction, detectIntentFunction);
+                SKResponse response = new SKResponse();
+                response.Value = result.Result.Trim();
+                return Results.Json(response);
+
+            }
+            catch (Exception ex)
+            {
+                return Results.Json(new SKResponse { Value = ex.Message });
+            }
+
+        });
+
 app.Run();
 
-
-static (string? model, string? endpoint, string? key) LoadHeaders(HttpContext context)
+static IKernel LoadKernel(HttpContext context)
 {
     var headers = context.Request.Headers;
     string? endpoint = headers["x-sk-web-app-endpoint"];
@@ -57,6 +62,20 @@ static (string? model, string? endpoint, string? key) LoadHeaders(HttpContext co
     }
     else
     {
-        return (endpoint, model, key);
+        IKernel kernel;
+        //If endpoint is empty, this could be OpenAI
+        if (String.IsNullOrEmpty(endpoint))
+        {
+            kernel = new KernelBuilder()
+                .WithOpenAITextCompletionService(model!, key!)
+                .Build();
+        }
+        else
+        {
+            kernel = new KernelBuilder()
+                .WithAzureTextCompletionService(model!, endpoint!, key!)
+                .Build();
+        }
+        return kernel;
     }
 }
