@@ -20,3 +20,5 @@ EXPOSE 80
 EXPOSE 443
 #docker build -t sk-web-api .
 #docker run -d -p 5132:80 --name sk-web-api sk-web-api:latest
+#az acr build --registry acaalbumsskraymo1 --image sk-web-app:v1 .
+#az acr task create --registry acaalbumsskraymo1 --name taskskwebappcodepush --image sk-web-app:latest --context https://github.com/skraymo1/sk-web-app.git#aca --file dockerfile --git-access-token
