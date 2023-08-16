@@ -1,5 +1,5 @@
 global using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
+using Microsoft.SemanticKernel.Planning;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -27,7 +27,28 @@ app.MapPost("plugins/{pluginName}/invoke/{functionName}", async (HttpContext htt
         });
 
 
+app.MapPost("planner", async (HttpContext httpContext, Query query) =>
+        {
+            try
+            {
+                var kernel = LoadKernel(httpContext);
+                var planner = new SequentialPlanner(kernel);
+                var pluginDirectory = "Plugins";
+                var plugInFunctions = kernel.ImportSemanticSkillFromDirectory(pluginDirectory, pluginName);
 
+
+
+                SKResponse response = new SKResponse();
+                response.Value = result.Result.Trim();
+                return Results.Json(response);
+
+            }
+            catch (Exception ex)
+            {
+                return Results.Json(new SKResponse { Value = ex.Message });
+            }
+
+        });
 
 app.Run();
 
